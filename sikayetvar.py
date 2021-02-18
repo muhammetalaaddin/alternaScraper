@@ -135,3 +135,46 @@ class SikayetVar():
                 data[brandname] = pageData[brandname]
  
         return data
+
+    #
+    # girilen banka linkinin alt kategorilerini tespit eder. Başlık ve link çitleri şeklinde return eder
+    #
+
+    def findSubCategoryNamesforBrand(self, brandurl):
+
+        soup = self.makeSoup(brandurl)
+
+        hashtags = soup.find('div', class_='hashtags').find_all('div')
+
+        data = {}
+
+        for hashtag in hashtags:
+
+            try:
+                title = hashtag.find('a').get('title')
+                href = self.baseurl + hashtag.find('a').get('href')
+
+                data[title] = href
+            except:
+
+                print('')
+
+        return data
+
+ 
+    # girilen markanın istenilen alt kategorisi varsa ilgili alt kategori'nin istenilen sayfa sayısı kadar yorumunu toplar.
+
+    def findSubCategoryReviews(self, subcategory, brandurl, pagecount):
+
+        subcategories = self.findSubCategoryNamesforBrand(brandurl)
+
+        if(subcategory in list(subcategories.keys())):
+
+            reviewslinks = self.findBrandReviewsUrlAndTitles(subcategories[subcategory], pagecount)
+
+            return self.findReviewsForBrand(reviewslinks)
+        
+        else:
+
+            print('subcategory does not exist')
+

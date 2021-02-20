@@ -1,6 +1,7 @@
 import requests as rq
 from bs4 import BeautifulSoup
 import json
+from trbanka import Trbanka
 
 
 class SikayetVar():
@@ -161,9 +162,9 @@ class SikayetVar():
 
         return data
 
- 
+    #
     # girilen markanın istenilen alt kategorisi varsa ilgili alt kategori'nin istenilen sayfa sayısı kadar yorumunu toplar.
-
+    #
     def findSubCategoryReviews(self, subcategory, brandurl, pagecount):
 
         subcategories = self.findSubCategoryNamesforBrand(brandurl)
@@ -177,4 +178,17 @@ class SikayetVar():
         else:
 
             print('subcategory does not exist')
+
+    
+    #
+    # var olan bankaların isimlerini ve linklerini return eder
+    #
+
+    def findBanksNamesAndUrls(self):
+
+        t = Trbanka()
+
+        banksInfo = t.findBankNamesandUrls()
+
+        return {item : self.baseurl + '/' + banksInfo[item].split(t.baseurl)[1] for item in banksInfo}
 

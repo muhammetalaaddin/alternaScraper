@@ -100,7 +100,7 @@ class Trbanka():
         return branchies
     
     #
-    # bir şube sayfasında yer alan yorumlar toplanmalı
+    # bir şube sayfasında yer alan yorumları bir liste olarak return eder.
     #
 
     def findReviewsforBranch(self, branchUrl):

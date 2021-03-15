@@ -77,3 +77,71 @@ class EksiSozluk():
         
 
         return data
+
+
+    # bir konu başlığının sondan istenilen sayfa sayısı kadar return etmeli
+
+    def find_commentsOnLastPages(self, titleurl, pagecount):
+
+        data = {}
+
+        commentNumber = 1
+
+        soup = self.makeSoup(titleurl)
+
+        lastPageNumber = int(soup.find('div', class_='pager').get('data-pagecount'))
+
+        desiredPageCount = pagecount
+
+        if( pagecount > int(lastPageNumber)):
+
+            desiredPageCount = lastPageNumber
+
+        for i in range(desiredPageCount):
+
+            print(titleurl + '?p=' + str(lastPageNumber - i))
+
+            soup = self.makeSoup(titleurl + '?p=' + str(lastPageNumber - i))
+
+            commentList = soup.find('ul', id='entry-item-list').findAll('div', class_='content')
+
+            for item in commentList:
+
+                data['comment_' + str(commentNumber)] = item.text.split('\n')[1]
+
+                commentNumber = commentNumber + 1
+        
+        return data
+
+
+
+
+
+
+
+e = EksiSozluk()
+
+kanallar = e.find_Channels()
+
+with open('kanallar.json', 'w') as outfile:
+
+    json.dump(kanallar, outfile)
+
+
+baslıklar = e.find_TopicInfoForChannel(kanallar['#spoiler'])
+
+with open('baslıklar.json', 'w') as outfile:
+
+    json.dump(baslıklar, outfile)
+
+comment_url = 'https://eksisozluk.com/eksi-itiraf--1037199'
+
+pagecount = 100
+
+comments = e.find_commentsOnLastPages(comment_url, 100)
+
+with open('comments.json', 'w') as outfile:
+
+    json.dump(comments, outfile)
+
+

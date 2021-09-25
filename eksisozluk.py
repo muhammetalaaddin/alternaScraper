@@ -51,7 +51,7 @@ class EksiSozluk():
 
         if( pagecount > int(lastPageNumber)):
 
-            desiredPageCount = lastPageNumber
+            desiredPageCount = int(lastPageNumber)
         
         #birinci sayfa
         
@@ -63,6 +63,7 @@ class EksiSozluk():
 
             commentNumber = commentNumber + 1
         
+
         for i in range(2, desiredPageCount + 1):
 
             soup = self.makeSoup(titleurl + '?p=' + str(i))
@@ -121,27 +122,47 @@ class EksiSozluk():
 
 e = EksiSozluk()
 
-kanallar = e.find_Channels()
-
-with open('kanallar.json', 'w') as outfile:
-
-    json.dump(kanallar, outfile)
 
 
-baslıklar = e.find_TopicInfoForChannel(kanallar['#spoiler'])
+data = {
+    '15 temmuz kontrollü darbe girişimiydi' : 'https://eksisozluk.com/15-temmuz-kontrollu-darbe-girisimiydi--5272942',
+    'gece vakti korna çalan çomar' : 'https://eksisozluk.com/gece-vakti-korna-calan-comar--5151104',
+    'negatif insanları hayatınızdan çıkarın' : 'https://eksisozluk.com/negatif-insanlari-hayatinizdan-cikarin--5228537',
+    'türkiyenin italyadan beter olacağı gerçeği' : 'https://eksisozluk.com/turkiyenin-italyadan-beter-olacagi-gercegi--6417432',
+    '7.9 milyon $ kızılay bağışının ensara verilmesi' : 'https://eksisozluk.com/7-9-milyon-kizilay-bagisinin-ensara-verilmesi--6342305',
+    '29 ocak 2020 vodafone cts bayi rezaleti' : 'https://eksisozluk.com/29-ocak-2020-vodafone-cts-bayi-rezaleti--6343955',
+    'küfür etkisi yaratan ama küfür olmayan cümleler' : 'https://eksisozluk.com/kufur-etkisi-yaratan-ama-kufur-olmayan-cumleler--151263',
+    'yok artık daha neler' : 'https://eksisozluk.com/yok-artik-daha-neler--230308',
+    'cristiano ronaldo' : 'https://eksisozluk.com/cristiano-ronaldo--1337211',
+    '1 mayıs 2021 corona aşısı yolsuzluğu iddiası' : 'https://eksisozluk.com/1-mayis-2021-corona-asisi-yolsuzlugu-iddiasi--6903154?day=2021-05-03',
+    'messi' : 'https://eksisozluk.com/messi--1296095',
+    '16 ocak 2021 mesut özilin fenerbahçeye transferi' : 'https://eksisozluk.com/16-ocak-2021-mesut-ozilin-fenerbahceye-transferi--6800751',
+    'anıtkabirde rte sloganları atmak' : 'https://eksisozluk.com/anitkabirde-rte-sloganlari-atmak--6242225',
+    'finlandiya başbakanının instagram paylaşımı' : 'https://eksisozluk.com/finlandiya-basbakaninin-instagram-paylasimi--6903106?a=popular'
 
-with open('baslıklar.json', 'w') as outfile:
+}
 
-    json.dump(baslıklar, outfile)
+pagecount = 20
 
-comment_url = 'https://eksisozluk.com/eksi-itiraf--1037199'
+'''
+for item in list(data.keys()):
 
-pagecount = 100
+    comment_url = data[item]
 
-comments = e.find_commentsOnLastPages(comment_url, 100)
+    comments = e.find_commentsOnMultiplePages(comment_url, pagecount= pagecount)
 
-with open('comments.json', 'w') as outfile:
+    with open( 'data/' + item + '.json', 'w') as outfile:
+
+        json.dump(comments, outfile)
+
+    print(item)
+'''
+
+
+comment_url = 'https://eksisozluk.com/finlandiya-basbakaninin-instagram-paylasimi--6903106'
+
+comments = e.find_commentsOnMultiplePages(comment_url, pagecount= pagecount)
+
+with open( 'finlandiya_basbakanının_instagram_paylasımı.json', 'w') as outfile:
 
     json.dump(comments, outfile)
-
-
